@@ -1,0 +1,1782 @@
+{
+	"info": {
+		"_postman_id": "88b14bc2-509e-4b35-8024-04478081b49f",
+		"name": "school",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "01.00 - student",
+			"item": [
+				{
+					"name": "01-00 - get-all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get size\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"01_total_elements\", jsonData.totalElements);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-01 - create-student-bad-request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"age\": 18\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-02 - create-student-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get Id\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    \r",
+									"    var location = pm.response.headers.get(\"Location\");\r",
+									"    id = location.substring(location.lastIndexOf('/') + 1);\r",
+									"    pm.environment.set(\"student_id\", id);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste\",\r\n    \"age\": 18,\r\n    \"status\": \"ACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-03 - get-all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check totalElements\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.totalElements).to.eql(pm.environment.get(\"01_total_elements\") + 1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-04 - get-by-id-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students/1234",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-05 - get-by-id-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"teste\");\r",
+									"    pm.expect(jsonData.status).to.eql(\"ACTIVE\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students/{{student_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"{{student_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-06 - update-student-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste atualizado\",\r\n    \"age\": 18,\r\n    \"status\": \"INACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/12131231212",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"12131231212"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-07 - update-student-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste atualizado\",\r\n    \"age\": 18,\r\n    \"status\": \"INACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/{{student_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"{{student_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-08 - get-by-id-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"teste atualizado\");\r",
+									"    pm.expect(jsonData.status).to.eql(\"INACTIVE\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students/{{student_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"{{student_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-09 - delete-student-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/1212121212",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"1212121212"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-10 - delete-student-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/{{student_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"{{student_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "01-11 - get-all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check totalElements\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.totalElements).to.eql(pm.environment.get(\"01_total_elements\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "02.00 - classroom",
+			"item": [
+				{
+					"name": "02-00 - get-all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Get size\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"02_total_elements\", jsonData.totalElements);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/classrooms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-01 - create-classroom-bad-request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Portuguese\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-02 - create-classroom-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get Id\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    \r",
+									"    var location = pm.response.headers.get(\"Location\");\r",
+									"    id = location.substring(location.lastIndexOf('/') + 1);\r",
+									"    pm.environment.set(\"classroom_id\", id);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Portuguese\",\r\n    \"dayOfWeek\": \"Monday\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-03 - get-all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check totalElements\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.totalElements).to.eql(pm.environment.get(\"02_total_elements\") + 1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/classrooms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-04 - get-by-id-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/classrooms/1234",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"1234"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-05 - get-by-id-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"Portuguese\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/classrooms/{{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"{{classroom_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-06 - update-classroom-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"English\",\r\n    \"dayOfWeek\": \"Monday\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms/12131231212",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"12131231212"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-07 - update-classroom-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"English\",\r\n    \"dayOfWeek\": \"Monday\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms/{{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"{{classroom_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-08 - get-by-id-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check id\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.eql(\"English\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/classrooms/{{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"{{classroom_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-09 - delete-classroom-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms/1212121212",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"1212121212"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-10 - delete-classroom-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms/{{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"{{classroom_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "02-11 - get-all",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check totalElements\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.totalElements).to.eql(pm.environment.get(\"02_total_elements\"));\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/classrooms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "03.00 - student-classsroom",
+			"item": [
+				{
+					"name": "03-00 - create-student-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get Id\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    \r",
+									"    var location = pm.response.headers.get(\"Location\");\r",
+									"    id = location.substring(location.lastIndexOf('/') + 1);\r",
+									"    pm.environment.set(\"student_id\", id);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste\",\r\n    \"age\": 18,\r\n    \"status\": \"ACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-01 - create-classroom-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get Id\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    \r",
+									"    var location = pm.response.headers.get(\"Location\");\r",
+									"    id = location.substring(location.lastIndexOf('/') + 1);\r",
+									"    pm.environment.set(\"classroom_id\", id);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Portuguese\",\r\n    \"dayOfWeek\": \"Monday\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-02 - create-student-classroom-bad-request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-03 - create-student-classroom-with-student-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom?studentId=9999999999&classroomId={{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": "9999999999"
+								},
+								{
+									"key": "classroomId",
+									"value": "{{classroom_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-04 - create-student-classroom-with-classroom-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom?studentId={{student_id}}&classroomId=99999999999",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": "{{student_id}}"
+								},
+								{
+									"key": "classroomId",
+									"value": "99999999999"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-05 - create-student-classroom-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get Id\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    \r",
+									"    var location = pm.response.headers.get(\"Location\");\r",
+									"    id = location.substring(location.lastIndexOf('/') + 1);\r",
+									"    pm.environment.set(\"student_classroom_id\", id);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom?studentId={{student_id}}&classroomId={{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": "{{student_id}}"
+								},
+								{
+									"key": "classroomId",
+									"value": "{{classroom_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-06 - create-student-classroom-conflict",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", function () {\r",
+									"    pm.response.to.have.status(409);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom?studentId={{student_id}}&classroomId={{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": "{{student_id}}"
+								},
+								{
+									"key": "classroomId",
+									"value": "{{classroom_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-07 - get-classroom-by-id-with-students-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check studends\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.students.length).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/classrooms/{{classroom_id}}?withStudents=true",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"{{classroom_id}}"
+							],
+							"query": [
+								{
+									"key": "withStudents",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-08 - get-student-by-id-with-classrooms-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check classroms\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.classrooms.length).to.eql(1);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students/{{student_id}}?withClassrooms=true",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"{{student_id}}"
+							],
+							"query": [
+								{
+									"key": "withClassrooms",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-09 - create-student-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Get Id\", function () {\r",
+									"    pm.response.to.have.header(\"Location\");\r",
+									"    \r",
+									"    var location = pm.response.headers.get(\"Location\");\r",
+									"    id = location.substring(location.lastIndexOf('/') + 1);\r",
+									"    pm.environment.set(\"student_inactive_id\", id);    \r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"teste INACTIVE\",\r\n    \"age\": 18,\r\n    \"status\": \"INACTIVE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-10 - create-student-classroom-bad-request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom?studentId={{student_inactive_id}}&classroomId={{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom"
+							],
+							"query": [
+								{
+									"key": "studentId",
+									"value": "{{student_inactive_id}}"
+								},
+								{
+									"key": "classroomId",
+									"value": "{{classroom_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-11 - get-all-students",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Check classrooms\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    \r",
+									"    jsonData.content.forEach(function(value) {\r",
+									"        if (value.classrooms.length > 0) {\r",
+									"            pm.expect(value.classrooms[0].name).to.equal(\"Portuguese\");\r",
+									"        }\r",
+									"    });\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/api/students?withClassrooms=true",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students"
+							],
+							"query": [
+								{
+									"key": "withClassrooms",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-12 - delete-student-classroom-not-found",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {\r",
+									"    pm.response.to.have.status(404);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom/11111",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom",
+								"11111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-13 - delete-student-classroom-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/student-classroom/{{student_classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"student-classroom",
+								"{{student_classroom_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-14 - delete-classroom-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/classrooms/{{classroom_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"classrooms",
+								"{{classroom_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-15 - delete-student-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/{{student_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"{{student_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "03-16 - delete-student-success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/api/students/{{student_inactive_id}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"students",
+								"{{student_inactive_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

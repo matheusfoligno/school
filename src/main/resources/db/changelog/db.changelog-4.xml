@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet author="Matheus" id="db.changelog-4" dbms="">
+
+		<preConditions onFail="CONTINUE"
+			onFailMessage="Tabela 'student_classroom' já existe">
+			<not>
+				<tableExists tableName="student_classroom" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="student_classroom">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints nullable="false" primaryKey="true"
+					unique="false" />
+			</column>
+
+			<column name="student_id" type="bigint">
+				<constraints nullable="false" primaryKey="false" />
+			</column>
+
+			<column name="classroom_id" type="bigint">
+				<constraints nullable="false" primaryKey="false" />
+			</column>
+
+		</createTable>
+
+		<addForeignKeyConstraint
+			baseColumnNames="student_id" baseTableName="student_classroom"
+			constraintName="student_classroom_fk_student" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="student" />
+
+		<addForeignKeyConstraint
+			baseColumnNames="classroom_id" baseTableName="student_classroom"
+			constraintName="student_classroom_fk_classroom" onDelete="CASCADE"
+			onUpdate="RESTRICT" referencedColumnNames="id"
+			referencedTableName="classroom" />
+
+	</changeSet>
+
+</databaseChangeLog> 

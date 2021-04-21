@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+	<changeSet author="Matheus" id="db.changelog-2" dbms="">
+
+		<preConditions onFail="CONTINUE"
+			onFailMessage="Tabela 'classroom' já existe">
+			<not>
+				<tableExists tableName="classroom" />
+			</not>
+		</preConditions>
+
+		<createTable tableName="classroom">
+			<column name="id" type="bigint" autoIncrement="true">
+				<constraints nullable="false" primaryKey="true"
+					unique="false" />
+			</column>
+
+			<column name="name" type="varchar(255)">
+				<constraints nullable="false" primaryKey="false" />
+			</column>
+
+			<column name="day_of_week" type="varchar(50)">
+				<constraints nullable="false" primaryKey=" false"
+					unique="false" />
+			</column>
+
+		</createTable>
+
+	</changeSet>
+
+</databaseChangeLog> 
